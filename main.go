@@ -4,12 +4,19 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
-	_ "github.com/air-examples/chatroom/handlers"
+	"github.com/air-examples/chatroom/gas"
+	"github.com/air-examples/chatroom/handlers"
+	"github.com/air-examples/chatroom/models"
 	"github.com/sheng/air"
 )
 
 func main() {
+
+	gas.InitGas()
+	models.InitModel()
+
 	shutdownChan := make(chan os.Signal, 1)
 	signal.Notify(shutdownChan, os.Interrupt, syscall.SIGTERM)
 	go func() {
@@ -19,7 +26,12 @@ func main() {
 	}()
 
 	<-shutdownChan
+	handlers.CloseSocket()
 	air.INFO("shutting down the server")
-	air.Shutdown(0)
+	if air.DebugMode {
+		air.Shutdown(time.Duration(1) * time.Second)
+	} else {
+		air.Shutdown(time.Duration(3) * time.Minute)
+	}
 	air.INFO("server gracefully stopped")
 }

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/base64"
 	"errors"
 	"strconv"
 
@@ -41,4 +42,8 @@ func GetInt64(req *air.Request, key string) (int64, error) {
 		return 0, errors.New("no specific key")
 	}
 	return strconv.ParseInt(v, 10, 64)
+}
+
+func Base64(s string) string {
+	return base64.StdEncoding.EncodeToString([]byte(s))
 }
