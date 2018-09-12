@@ -8,7 +8,7 @@ import (
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/models"
 	"github.com/air-examples/chatroom/utils"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 var (

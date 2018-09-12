@@ -2,7 +2,7 @@ package gas
 
 import (
 	"github.com/air-examples/chatroom/utils"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func PreRenderHandler() air.Gas {

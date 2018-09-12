@@ -7,7 +7,7 @@ import (
 	"github.com/air-examples/chatroom/common"
 	"github.com/air-examples/chatroom/models"
 	"github.com/air-examples/chatroom/utils"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func AuthHandler() air.Gas {

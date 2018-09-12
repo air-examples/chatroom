@@ -3,7 +3,7 @@ package handlers
 import (
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/utils"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func init() {

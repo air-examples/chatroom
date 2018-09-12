@@ -1,6 +1,6 @@
 # Chatroom
 
-A real-time web chatroom built using [Air](https://github.com/sheng/air).
+A real-time web chatroom built using [Air](https://github.com/aofei/air).
 
 ## Installation
 

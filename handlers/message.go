@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 type Message struct {

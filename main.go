@@ -9,7 +9,7 @@ import (
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/handlers"
 	"github.com/air-examples/chatroom/models"
-	"github.com/sheng/air"
+	"github.com/aofei/air"
 )
 
 func main() {

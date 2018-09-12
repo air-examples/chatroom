@@ -1,6 +1,6 @@
 package gas
 
-import "github.com/sheng/air"
+import "github.com/aofei/air"
 
 var (
 	Auth      = AuthHandler()
