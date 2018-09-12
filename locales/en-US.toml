@@ -1,1 +1,6 @@
 "title" = "Real-time Chatroom"
+"username" = "Username"
+"confirm" = "Confirm"
+"confirm your name" = "Please input your name"
+"error_msg" = "some error occurred"
+"send" = "send"

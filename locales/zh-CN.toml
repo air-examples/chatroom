@@ -1,1 +1,6 @@
 "title" = "实时网络聊天室"
+"username" = "用户名"
+"confirm" = "确认"
+"confirm your name" = "请输入您的昵称"
+"error_msg" = "出错了"
+"send" = "发送"

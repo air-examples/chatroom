@@ -8,6 +8,7 @@ import (
 
 func init() {
 	air.ErrorHandler = errorHandler
+	air.STATIC("/assets", air.AssetRoot)
 	air.GET("/", indexHandler, gas.PreRender)
 }
 
@@ -27,14 +28,15 @@ func errorHandler(err error, req *air.Request, res *air.Response) {
 		ret["code"] = e.Code
 		ret["error"] = e.Message
 		res.StatusCode = e.Code
-		if e.Code != 500 {
+		if req.Method != "GET" {
 			res.JSON(ret)
 			return
 		}
 		for k, v := range ret {
 			req.Values[k] = v
 		}
-		res.Render(req.Values, "error.html")
+		req.Values["error_msg"] = req.LocalizedString("error_msg")
+		res.Render(req.Values, "error.html", "base.html")
 		return
 	}
 
