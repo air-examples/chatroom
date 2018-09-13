@@ -4,7 +4,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/air-examples/chatroom/common"
 	"github.com/air-examples/chatroom/models"
 	"github.com/air-examples/chatroom/utils"
 	"github.com/aofei/air"
@@ -20,7 +19,7 @@ func AuthHandler() air.Gas {
 			name := ""
 			cookie := &air.Cookie{}
 			for _, c := range req.Cookies {
-				if c.Name == common.AuthCookie {
+				if c.Name == "name" {
 					name = c.Value
 					c.Expires = time.Now().
 						Add(7 * 24 * time.Hour)
