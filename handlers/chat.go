@@ -111,6 +111,7 @@ func socketHandler(req *air.Request, res *air.Response) error {
 							"err":     err,
 						})
 				}
+				me.rwLock.Unlock()
 			}
 		case <-me.shutdown:
 			break

@@ -21,10 +21,6 @@ func newMsg(from string, t air.WebSocketMessageType, b []byte) *Message {
 	_ = json.Unmarshal(b, &m)
 	content, _ := m["content"].(string)
 	msgType, _ := m["type"].(string)
-	air.DEBUG("mew msg", utils.M{
-		"byte": string(b),
-		"m":    m,
-	})
 	return &Message{
 		From:    from,
 		Type:    msgType,
