@@ -48,6 +48,32 @@ function convertData(data){
 	} 
 }
 
+var tips = {};
+
+getConst();
+
+function getConst() {
+	ajax({
+		type:'GET',
+		url:'/api/const',
+		success:function(res) {
+			console.log(res);
+			tips = res.data;
+		},
+		error:function(res) {
+			tips = {
+				'join chatroom':'',
+				'message can not be empty':'',
+				'name repeat, please input anothor name':'',
+				'connection closed':''
+			};
+			Object.keys(tips).forEach(function(k) {
+				tips[k] = k;
+			});
+		}
+	});
+}
+
 function InputName() {
 	let name = document.getElementById("name").value;
 	ajax({
@@ -58,7 +84,7 @@ function InputName() {
 			window.location.href = '/chat';
 		},
 		error:function(res) {
-			alert('name repeat, please input anothor name.');
+			alert(tips['name repeat, please input anothor name']);
 		}
 	});
 }
@@ -78,7 +104,7 @@ function showmsg(msg) {
 	console.log(msg);
 	let text = '';
 	if (msg.type === 'welcome') {
-		text = msg.time + '<br/>' + msg.from + ' join chatroom.';
+		text = msg.time + '<br/>' + msg.from + ' ' + tips['join chatroom'];
 	} else if (msg.type === 'text') {
 		text = msg.from + ' (' + msg.time + '): ' + msg.content;
 	}
@@ -102,7 +128,7 @@ function ConnectWebSocket(msg) {
 
 	ws.onclose = function(evt) {
 		console.log("Connection closed.");
-		showmsg('Connection closed.');
+		showmsg(tips['connection closed']);
 	};
 
 	ws.onerror = function(evt) {
@@ -114,7 +140,7 @@ function ConnectWebSocket(msg) {
 function SendMsg() {
 	let msg = document.getElementById('msg-input').value;
 	if (msg === undefined || msg === null || msg === '') {
-		alert('message can not be empty');
+		alert(tips['message can not be empty']);
 		return false;
 	}
 	if (ws === null) {

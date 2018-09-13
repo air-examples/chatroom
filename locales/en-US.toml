@@ -5,3 +5,7 @@
 "error_msg" = "some error occurred"
 "send" = "send"
 "say something..." = "say something..."
+"message can not be empty" = "message can not be empty"
+"join chatroom" = "join chatroom"
+"name repeat, please input anothor name" = "name repeat, please input anothor name"
+"connection closed" = "connection closed"

@@ -5,3 +5,7 @@
 "error_msg" = "出错了"
 "send" = "发送"
 "say something..." = "说点什么吧..."
+"message can not be empty" = "消息不能为空"
+"join chatroom" = "加入了聊天室"
+"name repeat, please input anothor name" = "名称重复, 请重新输入"
+"connection closed" = "连接已关闭"
