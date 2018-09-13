@@ -113,6 +113,10 @@ function ConnectWebSocket(msg) {
 
 function SendMsg() {
 	let msg = document.getElementById('msg-input').value;
+	if (msg === undefined || msg === null || msg === '') {
+		alert('message can not be empty');
+		return false;
+	}
 	if (ws === null) {
 		ConnectWebSocket(msg);
 		document.getElementById('msg-input').value = '';
