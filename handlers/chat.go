@@ -3,8 +3,8 @@ package handlers
 import (
 	"errors"
 	"strings"
+	"sync"
 
-	"github.com/air-examples/chatroom/common"
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/models"
 	"github.com/air-examples/chatroom/utils"
@@ -13,6 +13,7 @@ import (
 
 var (
 	users map[string]*SocketManager
+	mu    = &sync.Mutex{}
 )
 
 func init() {
@@ -37,7 +38,7 @@ func chatNameHandler(req *air.Request, res *air.Response) error {
 	}
 	models.SetUser(models.NewUser(name))
 	res.Cookies = append(res.Cookies, &air.Cookie{
-		Name:  common.AuthCookie,
+		Name:  "name",
 		Value: k,
 		Path:  "/",
 	})
@@ -75,7 +76,9 @@ func socketHandler(req *air.Request, res *air.Response) error {
 			if t, b, err := c.ReadMessage(); err == nil {
 				switch t {
 				case air.WebSocketMessageTypeText:
+					mu.Lock()
 					me.SendMsg(newMsg(name, t, b))
+					mu.Unlock()
 				case air.WebSocketMessageTypeBinary:
 				case air.WebSocketMessageTypeConnectionClose:
 					delete(users, name)

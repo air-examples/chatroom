@@ -17,11 +17,8 @@ func newSocketManager(name string) *SocketManager {
 
 func (sm *SocketManager) SendMsg(m *Message) {
 	for _, v := range users {
-		v := v
-		go func() {
-			v.m = m
-			v.newMsg <- struct{}{}
-		}()
+		v.m = m
+		v.newMsg <- struct{}{}
 	}
 }
 
