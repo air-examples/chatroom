@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/utils"
 	"github.com/aofei/air"
 )
@@ -9,14 +8,19 @@ import (
 func init() {
 	air.ErrorHandler = errorHandler
 	air.STATIC("/assets", air.AssetRoot)
-	air.GET("/", indexHandler, gas.PreRender)
+	air.GET("/", indexHandler)
 }
 
 func errorHandler(err error, req *air.Request, res *air.Response) {
 	e, ok := err.(*air.Error)
 	if !ok {
-		e.Code = 500
-		e.Message = "Server Internal Error"
+		e = &air.Error{
+			Code:    500,
+			Message: "Server Internal Error",
+		}
+		air.ERROR("error", utils.M{
+			"err": err.Error(),
+		})
 	}
 	if !res.Written {
 		if req.Method == "GET" || req.Method == "HEAD" {
@@ -35,7 +39,6 @@ func errorHandler(err error, req *air.Request, res *air.Response) {
 		for k, v := range ret {
 			req.Values[k] = v
 		}
-		req.Values["error_msg"] = req.LocalizedString("error_msg")
 		res.Render(req.Values, "error.html", "base.html")
 		return
 	}
