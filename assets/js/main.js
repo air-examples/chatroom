@@ -62,3 +62,62 @@ function InputName() {
 		}
 	});
 }
+
+var ws = null;
+
+function plain() {
+	let msg =  {
+		'type':arguments[0].type || 'text',
+		'content':arguments[0].text || ''
+	};
+	return JSON.stringify(msg);
+}
+
+function showmsg(msg) {
+	msg = JSON.parse(msg);
+	console.log(msg);
+	let text = '';
+	if (msg.type === 'welcome') {
+		text = msg.time + '<br/>' + msg.from + ' join chatroom.';
+	} else if (msg.type === 'text') {
+		text = msg.from + ' (' + msg.time + '): ' + msg.content;
+	}
+	document.getElementById('msg-list').innerHTML += '<p>'+text+'</p>';
+}
+
+function ConnectWebSocket(msg) {
+	ws = new WebSocket("ws://localhost:3333/socket");
+
+	ws.onopen = function(evt) {
+		console.log("Connection open ...");
+		ws.send(plain({type:'welcome'}));
+		ws.send(plain({text:msg}));
+	};
+
+	ws.onmessage = function(evt) {
+		console.log("Received Message: ");
+		console.log(evt);
+		showmsg(evt.data);
+	};
+
+	ws.onclose = function(evt) {
+		console.log("Connection closed.");
+		showmsg('Connection closed.');
+	};
+
+	ws.onerror = function(evt) {
+		console.log(evt);
+	};
+	return ws;
+}
+
+function SendMsg() {
+	let msg = document.getElementById('msg-input').value;
+	if (ws === null) {
+		ConnectWebSocket(msg);
+		document.getElementById('msg-input').value = '';
+		return false;
+	}
+	ws.send(plain({text:msg}));
+	document.getElementById('msg-input').value = '';
+}
