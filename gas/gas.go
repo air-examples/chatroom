@@ -1,13 +1,5 @@
 package gas
 
-import "github.com/aofei/air"
-
 var (
-	Auth      = AuthHandler()
-	PreRender = PreRenderHandler()
-	PreLogger = PreLoggerHandler()
+	Auth = AuthHandler()
 )
-
-func InitGas() {
-	air.Pregases = append(air.Pregases, PreLogger)
-}

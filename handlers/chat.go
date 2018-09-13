@@ -17,7 +17,7 @@ var (
 )
 
 func init() {
-	air.GET("/chat", chatPageHandler, gas.PreRender, gas.Auth)
+	air.GET("/chat", chatPageHandler, gas.Auth)
 	air.POST("/api/name", chatNameHandler)
 	air.GET("/socket", socketHandler, gas.Auth)
 }

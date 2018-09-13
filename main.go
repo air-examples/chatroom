@@ -6,7 +6,6 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/handlers"
 	"github.com/air-examples/chatroom/models"
 	"github.com/aofei/air"
@@ -14,7 +13,6 @@ import (
 
 func main() {
 
-	gas.InitGas()
 	models.InitModel()
 
 	shutdownChan := make(chan os.Signal, 1)
