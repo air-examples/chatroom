@@ -81,7 +81,6 @@ func socketHandler(req *air.Request, res *air.Response) error {
 					mu.Unlock()
 				case air.WebSocketMessageTypeBinary:
 				case air.WebSocketMessageTypeConnectionClose:
-					delete(users, name)
 					me.Close()
 					return
 				}
@@ -91,7 +90,6 @@ func socketHandler(req *air.Request, res *air.Response) error {
 					"err":     err.Error(),
 					"content": string(b),
 				})
-				delete(users, name)
 				me.Close()
 				return
 			}
@@ -101,17 +99,18 @@ func socketHandler(req *air.Request, res *air.Response) error {
 	for {
 		select {
 		case <-me.newMsg:
-			if v, err := me.m.Marshal(); err == nil {
-				err = c.WriteMessage(me.m.Mtype, v)
+			if v, err := me.msg.Marshal(); err == nil {
+				err = c.WriteMessage(me.msg.MType, v)
 				if err != nil {
 					air.ERROR("send socket msg error",
 						utils.M{
-							"content": me.m,
+							"content": me.msg,
 							"to":      me.name,
 							"err":     err,
 						})
+					me.Close()
 				}
-				me.rwLock.Unlock()
+				me.mu.Unlock()
 			}
 		case <-me.shutdown:
 			break

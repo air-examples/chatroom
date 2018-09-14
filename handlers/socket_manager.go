@@ -1,15 +1,13 @@
 package handlers
 
-import (
-	"sync"
-)
+import "sync"
 
 type SocketManager struct {
 	name     string
-	m        *Message
+	msg      *Message
 	newMsg   chan struct{}
 	shutdown chan struct{}
-	rwLock   *sync.Mutex
+	mu       *sync.Mutex
 }
 
 func newSocketManager(name string) *SocketManager {
@@ -17,20 +15,21 @@ func newSocketManager(name string) *SocketManager {
 		name:     name,
 		newMsg:   make(chan struct{}, 1),
 		shutdown: make(chan struct{}),
-		rwLock:   &sync.Mutex{},
+		mu:       &sync.Mutex{},
 	}
 }
 
-func (sm *SocketManager) SendMsg(m *Message) {
+func (sm *SocketManager) SendMsg(msg *Message) {
 	for _, v := range users {
-		v.rwLock.Lock()
-		v.m = m
+		v.mu.Lock()
+		v.msg = msg
 		v.newMsg <- struct{}{}
 	}
 }
 
 func (sm *SocketManager) Close() {
 	sm.shutdown <- struct{}{}
+	delete(users, sm.name)
 }
 
 func CloseSocket() {

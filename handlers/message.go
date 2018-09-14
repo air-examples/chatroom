@@ -10,7 +10,7 @@ import (
 
 type Message struct {
 	From    string                   `json:"from"`
-	Mtype   air.WebSocketMessageType `json:"-"`
+	MType   air.WebSocketMessageType `json:"-"`
 	Type    string                   `json:"type"`
 	Content string                   `json:"content"`
 	Time    string                   `json:"time"`
@@ -24,7 +24,7 @@ func newMsg(from string, t air.WebSocketMessageType, b []byte) *Message {
 	return &Message{
 		From:    from,
 		Type:    msgType,
-		Mtype:   t,
+		MType:   t,
 		Content: content,
 		Time:    time.Now().Format("15:04:05"),
 	}
