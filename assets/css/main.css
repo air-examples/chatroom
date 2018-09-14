@@ -29,9 +29,21 @@ button:hover {
 	margin-top:10rem;
 }
 
-#msg-list {
+main {
+	width:100%;
+	min-height:100%;
+}
+
+#msg-list-frame {
 	width:80%;
+	height:700px;
 	margin:0 auto;
+	overflow-y:scroll;
+}
+
+#msg-list-frame p {
+	margin:0;
+	padding:.5rem;
 }
 
 #msg-input {
@@ -43,7 +55,7 @@ button:hover {
 #msg-input-area {
 	width:80%;
 	margin:0 auto;
-	position:absolute;
+	position:fixed;
 	bottom:10%;
 	left:10%;
 	text-align:center;

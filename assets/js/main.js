@@ -101,14 +101,20 @@ function plain() {
 
 function showmsg(msg) {
 	msg = JSON.parse(msg);
-	console.log(msg);
+	let frame = document.getElementById('msg-list-frame');
+	let list = document.getElementById('msg-list');
 	let text = '';
 	if (msg.type === 'welcome') {
 		text = msg.time + '<br/>' + msg.from + ' ' + tips['join chatroom'];
+		text = '<p style="text-align:center;">'+text+'</p>';
 	} else if (msg.type === 'text') {
 		text = msg.from + ' (' + msg.time + '): ' + msg.content;
+		text = '<p>'+text+'</p>';
 	}
-	document.getElementById('msg-list').innerHTML += '<p>'+text+'</p>';
+	list.innerHTML += text;
+	if (list.clientHeight > frame.clientHeight) {
+		frame.scrollTop = list.clientHeight - frame.clientHeight;
+	}
 }
 
 function ConnectWebSocket(msg) {
@@ -138,6 +144,7 @@ function ConnectWebSocket(msg) {
 }
 
 function SendMsg() {
+	setFocus();
 	let msg = document.getElementById('msg-input').value;
 	if (msg === undefined || msg === null || msg === '') {
 		alert(tips['message can not be empty']);
@@ -151,3 +158,9 @@ function SendMsg() {
 	ws.send(plain({text:msg}));
 	document.getElementById('msg-input').value = '';
 }
+
+function setFocus() {
+	document.getElementById('msg-input').focus();
+}
+
+setFocus();
