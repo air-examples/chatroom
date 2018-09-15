@@ -20,7 +20,9 @@ func newSocketManager(name string) *SocketManager {
 }
 
 func (sm *SocketManager) SendMsg(msg *Message) {
-	for _, v := range users {
+	for _, i := range users.Keys() {
+		value, _ := users.Get(i)
+		v, _ := value.(*SocketManager)
 		v.mu.Lock()
 		v.msg = msg
 		v.newMsg <- struct{}{}
@@ -29,14 +31,13 @@ func (sm *SocketManager) SendMsg(msg *Message) {
 
 func (sm *SocketManager) Close() {
 	sm.shutdown <- struct{}{}
-	delete(users, sm.name)
+	users.Remove(sm.name)
 }
 
 func CloseSocket() {
-	for _, v := range users {
-		v := v
-		go func() {
-			v.Close()
-		}()
+	for _, i := range users.Keys() {
+		value, _ := users.Get(i)
+		v, _ := value.(*SocketManager)
+		v.Close()
 	}
 }

@@ -8,12 +8,13 @@ import (
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/models"
 	"github.com/air-examples/chatroom/utils"
+
 	"github.com/aofei/air"
+	cmap "github.com/orcaman/concurrent-map"
 )
 
 var (
-	users map[string]*SocketManager
-	mu    = &sync.Mutex{}
+	users = cmap.New()
 )
 
 func init() {
@@ -56,8 +57,10 @@ func socketHandler(req *air.Request, res *air.Response) error {
 	}
 	defer c.Close()
 
+	mu := &sync.Mutex{}
+
 	name := req.Params["name"]
-	if _, ok := users[name]; ok {
+	if _, ok := users.Get(name); ok {
 		air.ERROR("duplicate name", utils.M{
 			"req":  req,
 			"name": name,
@@ -66,10 +69,7 @@ func socketHandler(req *air.Request, res *air.Response) error {
 	}
 
 	me := newSocketManager(name)
-	if users == nil {
-		users = make(map[string]*SocketManager)
-	}
-	users[name] = me
+	users.Set(name, me)
 
 	go func() {
 		for {
