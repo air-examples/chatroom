@@ -18,16 +18,8 @@ func AuthHandler() air.Gas {
 			// }
 			name := ""
 			cookie := &air.Cookie{}
-			for _, c := range req.Cookies {
-				if c.Name == "name" {
-					name = c.Value
-					c.Expires = time.Now().
-						Add(7 * 24 * time.Hour)
-					cookie = c
-					break
-				}
-			}
-			if name == "" {
+			c, ok := req.Cookies["name"]
+			if !ok {
 				air.ERROR("name not found in cookie")
 				if req.Method == "GET" {
 					req.URL.Path = "/"
@@ -37,6 +29,9 @@ func AuthHandler() air.Gas {
 				return utils.Error(401,
 					errors.New("name not found in cookie"))
 			}
+			name = c.Value
+			c.Expires = time.Now().Add(7 * 24 * time.Hour)
+			cookie = c
 			v, ok := models.GetUser(name)
 			if !ok {
 				air.ERROR("name not found in cache")
@@ -49,7 +44,7 @@ func AuthHandler() air.Gas {
 					errors.New("name not found in cache"))
 			}
 			req.Params["name"] = v.Name
-			res.Cookies = append(res.Cookies, cookie)
+			res.Cookies["name"] = cookie
 			return next(req, res)
 		}
 	}

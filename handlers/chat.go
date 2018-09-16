@@ -28,6 +28,7 @@ func chatPageHandler(req *air.Request, res *air.Response) error {
 }
 
 func chatNameHandler(req *air.Request, res *air.Response) error {
+	air.INFO("in chat name handler")
 	name := strings.TrimSpace(req.Params["name"])
 	k := models.GetAuthKey(name)
 	if _, ok := models.GetUser(k); ok {
@@ -38,11 +39,11 @@ func chatNameHandler(req *air.Request, res *air.Response) error {
 		return utils.Error(400, errors.New("duplicate name"))
 	}
 	models.SetUser(models.NewUser(name))
-	res.Cookies = append(res.Cookies, &air.Cookie{
+	res.Cookies["name"] = &air.Cookie{
 		Name:  "name",
 		Value: k,
 		Path:  "/",
-	})
+	}
 	return utils.Success(res, "")
 }
 
