@@ -3,7 +3,6 @@ package handlers
 import (
 	"errors"
 	"strings"
-	"sync"
 
 	"github.com/air-examples/chatroom/gas"
 	"github.com/air-examples/chatroom/models"
@@ -58,8 +57,6 @@ func socketHandler(req *air.Request, res *air.Response) error {
 	}
 	defer c.Close()
 
-	mu := &sync.Mutex{}
-
 	name := req.Params["name"]
 	if _, ok := users.Get(name); ok {
 		air.ERROR("duplicate name", utils.M{
@@ -77,9 +74,7 @@ func socketHandler(req *air.Request, res *air.Response) error {
 			if t, b, err := c.ReadMessage(); err == nil {
 				switch t {
 				case air.WebSocketMessageTypeText:
-					mu.Lock()
 					me.SendMsg(newMsg(name, t, b))
-					mu.Unlock()
 				case air.WebSocketMessageTypeBinary:
 				case air.WebSocketMessageTypeConnectionClose:
 					me.Close()
