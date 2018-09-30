@@ -1,7 +1,8 @@
 package models
 
 import (
-	"github.com/air-examples/chatroom/utils"
+	"encoding/base64"
+
 	cmap "github.com/orcaman/concurrent-map"
 )
 
@@ -18,7 +19,7 @@ func InitModel() {
 }
 
 func GetAuthKey(name string) string {
-	return utils.Base64(name)
+	return base64.StdEncoding.EncodeToString([]byte(name))
 }
 
 func NewUser(name string) UserInfo {

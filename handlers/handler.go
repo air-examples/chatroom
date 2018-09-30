@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"github.com/air-examples/chatroom/utils"
 	"github.com/aofei/air"
 )
 
@@ -19,7 +18,7 @@ func errorHandler(err error, req *air.Request, res *air.Response) {
 			Code:    500,
 			Message: "Server Internal Error",
 		}
-		air.ERROR("error", utils.M{
+		air.ERROR("error", map[string]interface{}{
 			"err": err.Error(),
 		})
 	}
@@ -28,7 +27,7 @@ func errorHandler(err error, req *air.Request, res *air.Response) {
 			delete(res.Headers, "ETag")
 			delete(res.Headers, "Last-Modified")
 		}
-		ret := utils.M{}
+		ret := map[string]interface{}{}
 		ret["data"] = ""
 		ret["code"] = e.Code
 		ret["error"] = e.Message
@@ -51,7 +50,7 @@ func indexHandler(req *air.Request, res *air.Response) error {
 }
 
 func constHandler(req *air.Request, res *air.Response) error {
-	c := utils.M{
+	c := map[string]interface{}{
 		"message can not be empty":               "",
 		"join chatroom":                          "",
 		"name repeat, please input anothor name": "",
@@ -60,5 +59,5 @@ func constHandler(req *air.Request, res *air.Response) error {
 	for k, _ := range c {
 		c[k] = req.LocalizedString(k)
 	}
-	return utils.Success(res, c)
+	return Success(res, c)
 }

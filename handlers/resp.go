@@ -1,12 +1,6 @@
-package utils
+package handlers
 
-import (
-	"encoding/base64"
-
-	"github.com/aofei/air"
-)
-
-type M map[string]interface{}
+import "github.com/aofei/air"
 
 func Error(code int, err error) error {
 	return &air.Error{
@@ -16,7 +10,7 @@ func Error(code int, err error) error {
 }
 
 func Success(res *air.Response, data interface{}) error {
-	ret := M{}
+	ret := map[string]interface{}{}
 	ret["code"] = 0
 	ret["error"] = ""
 	ret["data"] = data
@@ -24,8 +18,4 @@ func Success(res *air.Response, data interface{}) error {
 		ret["data"] = ""
 	}
 	return res.JSON(ret)
-}
-
-func Base64(s string) string {
-	return base64.StdEncoding.EncodeToString([]byte(s))
 }

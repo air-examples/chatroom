@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/air-examples/chatroom/utils"
 	"github.com/aofei/air"
 )
 
@@ -17,7 +16,7 @@ type Message struct {
 }
 
 func newMsg(from string, t air.WebSocketMessageType, b []byte) *Message {
-	m := utils.M{}
+	m := map[string]interface{}{}
 	_ = json.Unmarshal(b, &m)
 	content, _ := m["content"].(string)
 	msgType, _ := m["type"].(string)

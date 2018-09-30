@@ -1,12 +1,14 @@
 package gas
 
 import (
-	"errors"
 	"time"
 
 	"github.com/air-examples/chatroom/models"
-	"github.com/air-examples/chatroom/utils"
 	"github.com/aofei/air"
+)
+
+var (
+	Auth = AuthHandler()
 )
 
 func AuthHandler() air.Gas {
@@ -26,8 +28,10 @@ func AuthHandler() air.Gas {
 					res.StatusCode = 302
 					return res.Redirect(req.URL.String())
 				}
-				return utils.Error(401,
-					errors.New("name not found in cookie"))
+				return &air.Error{
+					Code:    401,
+					Message: "name not found in cookie",
+				}
 			}
 			name = c.Value
 			c.Expires = time.Now().Add(7 * 24 * time.Hour)
@@ -40,8 +44,10 @@ func AuthHandler() air.Gas {
 					res.StatusCode = 302
 					return res.Redirect(req.URL.String())
 				}
-				return utils.Error(400,
-					errors.New("name not found in cache"))
+				return &air.Error{
+					Code:    400,
+					Message: "name not found in cache",
+				}
 			}
 			req.Params["name"] = v.Name
 			res.Cookies["name"] = cookie
