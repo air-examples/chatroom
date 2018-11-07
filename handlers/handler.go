@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"errors"
+
 	"github.com/aofei/air"
 )
 
@@ -11,37 +13,30 @@ func init() {
 	air.GET("/api/const", constHandler)
 }
 
+type Map map[string]interface{}
+
 func errorHandler(err error, req *air.Request, res *air.Response) {
-	e, ok := err.(*air.Error)
-	if !ok {
-		e = &air.Error{
-			Code:    500,
-			Message: "Server Internal Error",
-		}
-		air.ERROR("error", map[string]interface{}{
-			"err": err.Error(),
-		})
-	}
-	if !res.Written {
-		if req.Method == "GET" || req.Method == "HEAD" {
-			delete(res.Headers, "ETag")
-			delete(res.Headers, "Last-Modified")
-		}
-		ret := map[string]interface{}{}
-		ret["data"] = ""
-		ret["code"] = e.Code
-		ret["error"] = e.Message
-		res.StatusCode = e.Code
-		if req.Method != "GET" {
-			res.JSON(ret)
-			return
-		}
-		for k, v := range ret {
-			req.Values[k] = v
-		}
-		res.Render(req.Values, "error.html", "base.html")
+	if res.Written {
 		return
 	}
+
+	air.ERROR(err.Error())
+
+	if req.Method == "GET" || req.Method == "HEAD" {
+		delete(res.Headers, "ETag")
+		delete(res.Headers, "Last-Modified")
+		if req.Method == "GET" && res.Status == 401 {
+			res.Status = 307
+			res.Redirect("http://" + air.Address)
+			return
+		}
+	}
+
+	res.WriteJSON(Map{
+		"data":  "",
+		"code":  res.Status,
+		"error": err.Error(),
+	})
 
 }
 
@@ -50,7 +45,7 @@ func indexHandler(req *air.Request, res *air.Response) error {
 }
 
 func constHandler(req *air.Request, res *air.Response) error {
-	c := map[string]interface{}{
+	c := Map{
 		"message can not be empty":               "",
 		"join chatroom":                          "",
 		"name repeat, please input anothor name": "",
@@ -60,4 +55,21 @@ func constHandler(req *air.Request, res *air.Response) error {
 		c[k] = req.LocalizedString(k)
 	}
 	return Success(res, c)
+}
+
+func Error(res *air.Response, code int, message string) error {
+	res.Status = code
+	return errors.New(message)
+}
+
+func Success(res *air.Response, data interface{}) error {
+	res.Status = 200
+	if data == nil {
+		data = ""
+	}
+	return res.WriteJSON(Map{
+		"code":  0,
+		"error": "",
+		"data":  data,
+	})
 }

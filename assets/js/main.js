@@ -118,7 +118,7 @@ function showmsg(msg) {
 }
 
 function ConnectWebSocket(msg) {
-	ws = new WebSocket("ws://localhost:3333/socket");
+	ws = new WebSocket("ws://localhost:2333/socket");
 
 	ws.onopen = function(evt) {
 		console.log("Connection open ...");

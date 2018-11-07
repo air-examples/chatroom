@@ -1,6 +1,6 @@
 # Basis
 app_name = "Chatroom"
 debug_mode = true
-address = "127.0.0.1:3333"
+address = "127.0.0.1:2333"
 coffer_enabled = true
 i18n_enabled = true
